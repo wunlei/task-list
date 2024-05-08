@@ -35,7 +35,7 @@ export default class View {
     this.btnMarkAll = new BaseElement({
       parentNode: this.taskInputContainer.getNode(),
       tagName: "button",
-      textContent: 'mark all',
+      textContent: "mark all",
       classNames: ["btn", "btn_mark-all", "icon-btn"],
     });
 
@@ -55,7 +55,7 @@ export default class View {
     this.btnAddTask = new BaseElement({
       parentNode: this.taskInputContainer.getNode(),
       tagName: "button",
-      textContent: 'add task',
+      textContent: "add task",
       classNames: ["btn", "btn_add-task", "icon-btn"],
     });
 
@@ -65,7 +65,31 @@ export default class View {
     this.taskList = new TaskList(this.appContainer.getNode());
   }
 
+  onAddTask(cb) {
+    const handleTaskInput = () => {
+      if (this.taskInputElement.value) {
+        cb(this.taskInputElement.value);
+        this.taskInputElement.value = "";
+      }
+      this.btnAddTask.addClass("btn_hidden");
+      this.taskInputContainer.removeClass("input-container_focused");
+    };
+    this.taskInputElement.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        handleTaskInput();
+        this.btnAddTask.removeClass("btn_hidden");
+        this.taskInputContainer.addClass("input-container_focused");
+      }
+    });
+    this.taskInputElement.addEventListener("blur", handleTaskInput);
+    this.btnAddTask.getNode().addEventListener("click", handleTaskInput);
+  }
+
   renderTasksList(list) {
     this.taskList.renderTasksList(list);
+  }
+
+  handleCreateTask(task) {
+    this.taskList.addTask(task);
   }
 }
