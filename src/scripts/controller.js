@@ -4,4 +4,12 @@ export default class Controller {
     this.view = view;
     this.init();
   }
+
+  init() {
+    const tasksList = this.state.getAllTasks();
+
+    if (tasksList.length) {
+      this.view.renderTasksList(this.state.getAllTasks());
+    }
+  }
 }

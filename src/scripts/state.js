@@ -1,13 +1,28 @@
-const mock = [
-  { id: 1, text: "buy milk", isDone: false },
-  { id: 3, text: "pet the cat", isDone: true },
-];
+// const mock = [
+//   { id: 1, text: "buy milk", isDone: false },
+//   { id: 3, text: "pet the cat", isDone: true },
+// ];
 
 export default class State {
   constructor() {
     this.tasks = [];
-    this.tasks = mock;
+    // this.tasks = mock;
     this.nextMarkState = true;
+    this.getFromLocalStorage();
+    window.addEventListener("beforeunload", () => this.saveToLocalStorage());
+  }
+
+  getFromLocalStorage() {
+    const list = localStorage.getItem("task-list");
+
+    if (list) {
+      this.tasks = JSON.parse(list);
+    }
+  }
+
+  saveToLocalStorage() {
+    const list = JSON.stringify(this.tasks);
+    localStorage.setItem("task-list", list);
   }
 
   createTask(text) {
@@ -53,6 +68,16 @@ export default class State {
     }
   }
 
+  resetNextMarkState() {
+    const isAllDone = this.tasks.every((task) => task.isDone);
+
+    if (!isAllDone) {
+      this.nextMarkState = true;
+    } else {
+      this.nextMarkState = false;
+    }
+  }
+
   updateTask(task) {
     const taskIdx = this.tasks.findIndex((el) => el.id === task.id);
 
@@ -61,5 +86,9 @@ export default class State {
     }
 
     this.tasks[taskIdx] = task;
+  }
+
+  clearAllCompleted() {
+    this.tasks = this.tasks.filter((el) => !el.isDone);
   }
 }
