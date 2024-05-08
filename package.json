@@ -1,0 +1,12 @@
+{
+  "main": "src/script.js",
+  "scripts": {
+    "lint": "npx eslint **/*.js",
+    "lint-and-fix": "npx eslint . --fix"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.5",
+    "eslint-config-prettier": "^9.1.0"
+  }
+}
