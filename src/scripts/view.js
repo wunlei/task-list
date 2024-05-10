@@ -101,6 +101,10 @@ export default class View {
     this.taskList.onTaskStateUpdate(cb);
   }
 
+  onTaskTextUpdate(cb) {
+    this.taskList.onTaskTextUpdate(cb);
+  }
+
   renderTasksList(list) {
     this.taskList.renderTasksList(list);
   }

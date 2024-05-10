@@ -74,6 +74,35 @@ export default class TaskItem {
       parentNode: this.taskEditorContainer.getNode(),
       classNames: ["btn", "btn_save-task", "icon-btn"],
     });
+
+    this.editBtn.getNode().onclick = () => {
+      this.handleEditTask();
+    };
+
+    this.taskText.getNode().ondblclick = () => {
+      this.handleEditTask();
+    };
+  }
+
+  handleEditTask() {
+    const editInputEl = this.taskTextInputInput.getNode();
+    editInputEl.value = this.text;
+    this.showTaskEditInput();
+    editInputEl.focus();
+  }
+
+  showTaskEditInput() {
+    this.taskWrapper.destroy();
+    this.editBtn.destroy();
+    this.deleteBtn.destroy();
+    this.taskEditorContainer.appendToParent(this.container.getNode());
+  }
+
+  showTaskElement() {
+    this.taskWrapper.appendToParent(this.container.getNode());
+    this.editBtn.appendToParent(this.container.getNode());
+    this.deleteBtn.appendToParent(this.container.getNode());
+    this.taskEditorContainer.destroy();
   }
 
   onDelete(cb) {
@@ -104,6 +133,34 @@ export default class TaskItem {
       text: this.text,
       isDone: this.isDone,
     };
+  }
+
+  onTaskTextUpdate(cb) {
+    const taskEditInputElement = this.taskTextInputInput.getNode();
+    const handleTodoUpdate = () => {
+      const newText = taskEditInputElement.value.trim();
+      if (newText && this.text !== newText) {
+        this.text = newText;
+        const currentTask = this.getCurrentTask();
+        currentTask.text = newText;
+        cb(currentTask);
+        this.taskText.updateTextContent(newText);
+      }
+      this.showTaskElement();
+    };
+    taskEditInputElement.addEventListener("blur", handleTodoUpdate);
+    taskEditInputElement.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        handleTodoUpdate();
+      }
+    });
+    this.saveBtn.getNode().addEventListener("click", handleTodoUpdate);
+  }
+
+  handleTaskUpdate(task) {
+    this.handleTaskStateUpdate(task);
+    this.text = task.text;
+    this.taskText.updateTextContent(task.text);
   }
 
   handleTaskStateUpdate(task) {

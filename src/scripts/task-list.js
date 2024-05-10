@@ -139,12 +139,17 @@ export default class TaskList {
   onTaskStateUpdate(cb) {
     const handler = (task) => {
       cb(task);
-      this.updateActiveItemsCounter();
-      this.updateElementsOnScreen();
     };
     this.taskStateUpdateCallback = handler;
     this.taskItems.forEach((taskItem) => {
       taskItem.element.onTaskStateUpdate(handler);
+    });
+  }
+
+  onTaskTextUpdate(cb) {
+    this.taskTextUpdateCallback = cb;
+    this.taskItems.forEach((taskItem) => {
+      taskItem.element.onTaskTextUpdate(cb);
     });
   }
 

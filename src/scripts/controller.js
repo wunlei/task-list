@@ -17,6 +17,7 @@ export default class Controller {
       this.view.renderTasksList(this.state.getAllTasks());
     }
 
+    this.view.onTaskTextUpdate(this.updateTask);
     this.view.onTaskStateUpdate(this.updateTaskState);
     this.view.onAddTask(this.createTask);
     this.view.onTaskDelete(this.deleteTask);
