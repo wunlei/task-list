@@ -65,6 +65,14 @@ export default class View {
     this.taskList = new TaskList(this.appContainer.getNode());
   }
 
+  handleTaskStateUpdate(task) {
+    this.taskList.handleTaskStateUpdate(task);
+  }
+
+  handleAllTasksStateUpdate(tasks) {
+    this.taskList.updateAllTasksState(tasks);
+  }
+
   onAddTask(cb) {
     const handleTaskInput = () => {
       if (this.taskInputElement.value) {
@@ -87,6 +95,10 @@ export default class View {
 
   onTaskDelete(cb) {
     this.taskList.onTaskDelete(cb);
+  }
+
+  onTaskStateUpdate(cb) {
+    this.taskList.onTaskStateUpdate(cb);
   }
 
   renderTasksList(list) {

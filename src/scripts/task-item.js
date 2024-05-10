@@ -80,6 +80,44 @@ export default class TaskItem {
     this.deleteBtn.getNode().addEventListener("click", () => cb(this.id));
   }
 
+  onTaskStateUpdate(cb) {
+    const checkboxEl = this.checkbox.getNode();
+    const currentTask = this.getCurrentTask();
+    checkboxEl.addEventListener("change", () => {
+      if (checkboxEl.checked) {
+        this.isDone = true;
+        currentTask.isDone = true;
+        this.container.addClass("task-item_done");
+        cb(currentTask);
+      } else {
+        this.isDone = false;
+        currentTask.isDone = false;
+        this.container.removeClass("task-item_done");
+        cb(currentTask);
+      }
+    });
+  }
+
+  getCurrentTask() {
+    return {
+      id: this.id,
+      text: this.text,
+      isDone: this.isDone,
+    };
+  }
+
+  handleTaskStateUpdate(task) {
+    const checkboxEl = this.checkbox.getNode();
+    if (task.isDone) {
+      checkboxEl.checked = true;
+      this.container.addClass("task-item_done");
+    } else {
+      checkboxEl.checked = false;
+      this.container.removeClass("task-item_done");
+    }
+    this.isDone = task.isDone;
+  }
+
   appendToParent(parentNode) {
     this.container.appendToParent(parentNode);
   }

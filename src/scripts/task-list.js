@@ -108,6 +108,10 @@ export default class TaskList {
     if (this.deleteTaskCallback) {
       taskElement.onDelete(this.deleteTaskCallback);
     }
+    if (this.taskStateUpdateCallback) {
+      taskElement.onTaskStateUpdate(this.taskStateUpdateCallback);
+    }
+
     return taskElement;
   }
 
@@ -130,5 +134,28 @@ export default class TaskList {
     this.taskItems.forEach((task) => {
       task.element.onDelete(cb);
     });
+  }
+
+  onTaskStateUpdate(cb) {
+    const handler = (task) => {
+      cb(task);
+      this.updateActiveItemsCounter();
+      this.updateElementsOnScreen();
+    };
+    this.taskStateUpdateCallback = handler;
+    this.taskItems.forEach((taskItem) => {
+      taskItem.element.onTaskStateUpdate(handler);
+    });
+  }
+
+  handleTaskStateUpdate(task) {
+    const taskItem = this.taskItems.find((el) => el.id === task.id);
+    if (taskItem) {
+      taskItem.element.handleTaskStateUpdate(task);
+    }
+  }
+
+  updateAllTasksState(tasks) {
+    tasks.forEach((task) => this.handleTaskStateUpdate(task));
   }
 }

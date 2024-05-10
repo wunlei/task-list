@@ -2,6 +2,9 @@ export default class Controller {
   constructor(state, view) {
     this.createTask = this.createTask.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
+    this.updateTask = this.updateTask.bind(this);
+    this.updateTaskState = this.updateTaskState.bind(this);
+
     this.state = state;
     this.view = view;
     this.init();
@@ -14,6 +17,7 @@ export default class Controller {
       this.view.renderTasksList(this.state.getAllTasks());
     }
 
+    this.view.onTaskStateUpdate(this.updateTaskState);
     this.view.onAddTask(this.createTask);
     this.view.onTaskDelete(this.deleteTask);
   }
@@ -28,5 +32,14 @@ export default class Controller {
     this.state.deleteTask(id);
     const isEmpty = this.state.getAllTasks().length === 0;
     this.view.handleTaskDelete(id, isEmpty);
+  }
+
+  updateTask(task) {
+    this.state.updateTask(task);
+  }
+
+  updateTaskState(task) {
+    this.state.updateTask(task);
+    this.state.resetNextMarkState();
   }
 }
