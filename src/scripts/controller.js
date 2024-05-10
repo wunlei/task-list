@@ -4,6 +4,7 @@ export default class Controller {
     this.deleteTask = this.deleteTask.bind(this);
     this.updateTask = this.updateTask.bind(this);
     this.updateTaskState = this.updateTaskState.bind(this);
+    this.markAllTasks = this.markAllTasks.bind(this);
 
     this.state = state;
     this.view = view;
@@ -21,6 +22,7 @@ export default class Controller {
     this.view.onTaskStateUpdate(this.updateTaskState);
     this.view.onAddTask(this.createTask);
     this.view.onTaskDelete(this.deleteTask);
+    this.view.onMarkAll(this.markAllTasks);
   }
 
   createTask(text) {
@@ -42,5 +44,12 @@ export default class Controller {
   updateTaskState(task) {
     this.state.updateTask(task);
     this.state.resetNextMarkState();
+  }
+
+  markAllTasks() {
+    this.state.markAll();
+    const tasks = this.state.getAllTasks();
+    this.view.handleAllTasksStateUpdate(tasks);
+    // tasks.forEach((task) => this.view.handleTaskStateUpdate(task));
   }
 }

@@ -51,6 +51,10 @@ export default class View {
 
     this.taskInputElement.focus();
     this.taskInputElement.placeholder = "What needs to be done?";
+    this.taskInputElement.onfocus = () => {
+      this.taskInputContainer.addClass("input-container_focused");
+      this.btnAddTask.removeClass("btn_hidden");
+    };
 
     this.btnAddTask = new BaseElement({
       parentNode: this.taskInputContainer.getNode(),
@@ -63,6 +67,12 @@ export default class View {
 
     // todo list
     this.taskList = new TaskList(this.appContainer.getNode());
+  }
+
+  onMarkAll(cb) {
+    this.btnMarkAll.getNode().onclick = () => {
+      cb();
+    };
   }
 
   handleTaskStateUpdate(task) {
@@ -105,16 +115,30 @@ export default class View {
     this.taskList.onTaskTextUpdate(cb);
   }
 
-  renderTasksList(list) {
-    this.taskList.renderTasksList(list);
-  }
-
   handleCreateTask(task) {
     this.taskList.addTask(task);
+    this.toggleMarkAllBtn(false);
   }
 
   handleTaskDelete(id, isListEmpty) {
     this.taskList.handleDeleteTask(id);
     this.toggleMarkAllBtn(isListEmpty);
+  }
+
+  renderTasksList(list) {
+    if (list.length === 0) {
+      this.toggleMarkAllBtn(true);
+      return;
+    }
+    this.toggleMarkAllBtn(false);
+    this.taskList.renderTasksList(list);
+  }
+
+  toggleMarkAllBtn(isHidden) {
+    if (isHidden) {
+      this.btnMarkAll.addClass("btn_hidden");
+    } else {
+      this.btnMarkAll.removeClass("btn_hidden");
+    }
   }
 }
