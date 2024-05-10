@@ -85,11 +85,20 @@ export default class View {
     this.btnAddTask.getNode().addEventListener("click", handleTaskInput);
   }
 
+  onTaskDelete(cb) {
+    this.taskList.onTaskDelete(cb);
+  }
+
   renderTasksList(list) {
     this.taskList.renderTasksList(list);
   }
 
   handleCreateTask(task) {
     this.taskList.addTask(task);
+  }
+
+  handleTaskDelete(id, isListEmpty) {
+    this.taskList.handleDeleteTask(id);
+    this.toggleMarkAllBtn(isListEmpty);
   }
 }

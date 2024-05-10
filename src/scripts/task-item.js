@@ -47,14 +47,14 @@ export default class TaskItem {
     this.editBtn = new BaseElement({
       parentNode: containerNode,
       tagName: "button",
-      textContent: 'edit',
+      textContent: "edit",
       classNames: ["btn", "btn_edit-task", "icon-btn"],
     });
 
     this.deleteBtn = new BaseElement({
       parentNode: containerNode,
       tagName: "button",
-      textContent: 'delete',
+      textContent: "delete",
       classNames: ["btn", "btn_delete-task", "icon-btn"],
     });
 
@@ -70,10 +70,14 @@ export default class TaskItem {
 
     this.saveBtn = new BaseElement({
       tagName: "button",
-      textContent: 'save',
+      textContent: "save",
       parentNode: this.taskEditorContainer.getNode(),
       classNames: ["btn", "btn_save-task", "icon-btn"],
     });
+  }
+
+  onDelete(cb) {
+    this.deleteBtn.getNode().addEventListener("click", () => cb(this.id));
   }
 
   appendToParent(parentNode) {

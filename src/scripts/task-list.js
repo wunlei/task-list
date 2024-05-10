@@ -105,6 +105,30 @@ export default class TaskList {
       parentNode: this.taskListElement.getNode(),
       task,
     });
+    if (this.deleteTaskCallback) {
+      taskElement.onDelete(this.deleteTaskCallback);
+    }
     return taskElement;
+  }
+
+  handleDeleteTask(id) {
+    this.taskItems = this.taskItems.filter((item) => {
+      if (item.id === id) {
+        item.element.destroy();
+        return false;
+      }
+      return true;
+    });
+    if (this.taskItems.length === 0) {
+      this.container.destroy();
+      this.currCategory = "all";
+    }
+  }
+
+  onTaskDelete(cb) {
+    this.deleteTaskCallback = cb;
+    this.taskItems.forEach((task) => {
+      task.element.onDelete(cb);
+    });
   }
 }
