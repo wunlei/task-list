@@ -47,6 +47,10 @@ export default class TaskList {
       classNames: ["btn", "tab", "tab_category-all", "tab_active"],
     });
 
+    this.btnCategoryAll.getNode().onclick = () => {
+      this.showAll();
+    };
+
     this.btnCategoryActive = new BaseElement({
       parentNode: tabsContainerElement,
       tagName: "button",
@@ -54,12 +58,20 @@ export default class TaskList {
       classNames: ["btn", "tab", "tab_category-active"],
     });
 
+    this.btnCategoryActive.getNode().onclick = () => {
+      this.showActive();
+    };
+
     this.btnCategoryCompleted = new BaseElement({
       parentNode: tabsContainerElement,
       tagName: "button",
       textContent: "Completed",
       classNames: ["btn", "tab", "tab_category-completed"],
     });
+
+    this.btnCategoryCompleted.getNode().onclick = () => {
+      this.showCompleted();
+    };
 
     this.categoryBtns = {
       all: this.btnCategoryAll,
@@ -79,6 +91,68 @@ export default class TaskList {
     this.hintTextElement = new BaseElement({
       classNames: ["hint"],
     });
+  }
+
+  renderActiveCategoryItems() {
+    this.taskListElement.getNode().replaceChildren();
+
+    Object.entries(this.categoryBtns).forEach(([key, btn]) => {
+      if (key === this.currCategory) {
+        btn.addClass("tab_active");
+      } else {
+        btn.removeClass("tab_active");
+      }
+    });
+
+    if (this.visibleElements.length === 0 && this.taskItems.length > 0) {
+      if (this.currCategory === "active") {
+        this.hintTextElement.updateTextContent("All done ヽ(o＾▽＾o)ノ");
+      } else {
+        this.hintTextElement.updateTextContent("No tasks (｡╯︵╰｡)");
+      }
+
+      this.hintTextElement.appendToParent(this.taskListElement.getNode());
+
+      return;
+    }
+
+    this.visibleElements.forEach((el) =>
+      el.element.appendToParent(this.taskListElement.getNode()),
+    );
+  }
+
+  updateElementsOnScreen() {
+    // if (this.currCategory === "all") {
+    //   this.showAll();
+    // }
+    if (this.currCategory === "active") {
+      this.showActive();
+    }
+    if (this.currCategory === "completed") {
+      this.showCompleted();
+    }
+  }
+
+  showAll() {
+    this.currCategory = "all";
+    this.visibleElements = this.taskItems;
+    this.renderActiveCategoryItems();
+  }
+
+  showActive() {
+    this.currCategory = "active";
+    this.visibleElements = this.taskItems.filter(
+      (item) => !item.element.getCurrentTask().isDone,
+    );
+    this.renderActiveCategoryItems();
+  }
+
+  showCompleted() {
+    this.currCategory = "completed";
+    this.visibleElements = this.taskItems.filter(
+      (item) => item.element.getCurrentTask().isDone,
+    );
+    this.renderActiveCategoryItems();
   }
 
   removeCompletedTasks() {
@@ -110,6 +184,7 @@ export default class TaskList {
       this.addTask(el);
     });
 
+    this.updateActiveItemsCounter();
     this.container.appendToParent(this.parentNode);
   }
 
@@ -122,6 +197,8 @@ export default class TaskList {
     });
 
     this.container.appendToParent(this.parentNode);
+    this.updateActiveItemsCounter();
+    this.updateElementsOnScreen();
   }
 
   createTaskElement(task) {
@@ -155,7 +232,21 @@ export default class TaskList {
     if (this.taskItems.length === 0) {
       this.container.destroy();
       this.currCategory = "all";
+      return;
     }
+
+    this.updateElementsOnScreen();
+    this.updateActiveItemsCounter();
+  }
+
+  updateActiveItemsCounter() {
+    const undoneItems = this.taskItems.filter(
+      (item) => !item.element.getCurrentTask().isDone,
+    );
+
+    this.activeItemsCounter.updateTextContent(
+      `Tasks left: ${undoneItems.length}`,
+    );
   }
 
   onTaskDelete(cb) {
@@ -168,9 +259,12 @@ export default class TaskList {
   onTaskStateUpdate(cb) {
     const handler = (task) => {
       cb(task);
+      this.updateActiveItemsCounter();
+      this.updateElementsOnScreen();
     };
 
     this.taskStateUpdateCallback = handler;
+
     this.taskItems.forEach((taskItem) => {
       taskItem.element.onTaskStateUpdate(handler);
     });
@@ -192,5 +286,7 @@ export default class TaskList {
 
   updateAllTasksState(tasks) {
     tasks.forEach((task) => this.handleTaskStateUpdate(task));
+    this.updateElementsOnScreen();
+    this.updateActiveItemsCounter();
   }
 }
