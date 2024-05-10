@@ -35,7 +35,6 @@ export default class View {
     this.btnMarkAll = new BaseElement({
       parentNode: this.taskInputContainer.getNode(),
       tagName: "button",
-      textContent: "mark all",
       classNames: ["btn", "btn_mark-all", "icon-btn"],
     });
 
@@ -59,7 +58,6 @@ export default class View {
     this.btnAddTask = new BaseElement({
       parentNode: this.taskInputContainer.getNode(),
       tagName: "button",
-      textContent: "add task",
       classNames: ["btn", "btn_add-task", "icon-btn"],
     });
 
