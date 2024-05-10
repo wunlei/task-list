@@ -23,6 +23,7 @@ export default class Controller {
     this.view.onAddTask(this.createTask);
     this.view.onTaskDelete(this.deleteTask);
     this.view.onMarkAll(this.markAllTasks);
+    this.view.onRemoveCompleted(this.deleteTask);
   }
 
   createTask(text) {

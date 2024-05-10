@@ -115,6 +115,10 @@ export default class View {
     this.taskList.onTaskTextUpdate(cb);
   }
 
+  onRemoveCompleted(cb) {
+    this.taskList.onRemoveCompletedTasks(cb);
+  }
+
   handleCreateTask(task) {
     this.taskList.addTask(task);
     this.toggleMarkAllBtn(false);

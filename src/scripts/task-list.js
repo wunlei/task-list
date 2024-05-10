@@ -73,6 +73,30 @@ export default class TaskList {
       textContent: "Clear completed",
       classNames: ["btn", "btn_clear-completed"],
     });
+
+    this.btnClearCompleted.getNode().onclick = () =>
+      this.removeCompletedTasks();
+    this.hintTextElement = new BaseElement({
+      classNames: ["hint"],
+    });
+  }
+
+  removeCompletedTasks() {
+    const cb = this.removeCompletedCb;
+    if (!cb) {
+      return;
+    }
+    this.taskItems.forEach((item) => {
+      const task = item.element.getCurrentTask();
+      if (task.isDone) {
+        this.handleDeleteTask(task.id);
+        cb(task.id);
+      }
+    });
+  }
+
+  onRemoveCompletedTasks(cb) {
+    this.removeCompletedCb = cb;
   }
 
   renderTasksList(list) {
@@ -105,11 +129,15 @@ export default class TaskList {
       parentNode: this.taskListElement.getNode(),
       task,
     });
+
     if (this.deleteTaskCallback) {
       taskElement.onDelete(this.deleteTaskCallback);
     }
     if (this.taskStateUpdateCallback) {
       taskElement.onTaskStateUpdate(this.taskStateUpdateCallback);
+    }
+    if (this.taskTextUpdateCallback) {
+      taskElement.onTaskTextUpdate(this.taskTextUpdateCallback);
     }
 
     return taskElement;
@@ -123,6 +151,7 @@ export default class TaskList {
       }
       return true;
     });
+
     if (this.taskItems.length === 0) {
       this.container.destroy();
       this.currCategory = "all";
@@ -140,6 +169,7 @@ export default class TaskList {
     const handler = (task) => {
       cb(task);
     };
+
     this.taskStateUpdateCallback = handler;
     this.taskItems.forEach((taskItem) => {
       taskItem.element.onTaskStateUpdate(handler);
