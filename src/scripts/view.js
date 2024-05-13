@@ -35,7 +35,7 @@ export default class View {
     this.btnMarkAll = new BaseElement({
       parentNode: this.taskInputContainer.getNode(),
       tagName: "button",
-      classNames: ["btn", "btn_mark-all", "icon-btn"],
+      classNames: ["btn", "btn_mark-all", "icon-btn", "btn_hidden"],
     });
 
     this.btnMarkAll.getNode().title = "Mark all";
