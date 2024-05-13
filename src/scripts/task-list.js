@@ -24,6 +24,7 @@ export default class TaskList {
     });
 
     // controls
+
     const controlsContainer = this.taskControlsContainer.getNode();
 
     this.activeItemsCounter = new BaseElement({
@@ -88,6 +89,7 @@ export default class TaskList {
 
     this.btnClearCompleted.getNode().onclick = () =>
       this.removeCompletedTasks();
+
     this.hintTextElement = new BaseElement({
       classNames: ["hint"],
     });
@@ -160,23 +162,20 @@ export default class TaskList {
     if (!cb) {
       return;
     }
+
     this.taskItems.forEach((item) => {
       const task = item.element.getCurrentTask();
       if (task.isDone) {
-        this.handleDeleteTask(task.id);
         cb(task.id);
       }
     });
-  }
-
-  onRemoveCompletedTasks(cb) {
-    this.removeCompletedCb = cb;
   }
 
   renderTasksList(list) {
     if (list.length === 0) {
       return;
     }
+
     this.taskListElement.getNode().replaceChildren();
     this.taskItems = [];
 
@@ -196,7 +195,10 @@ export default class TaskList {
       element: taskElement,
     });
 
-    this.container.appendToParent(this.parentNode);
+    if (!this.container.getNode().parentElement) {
+      this.container.appendToParent(this.parentNode);
+    }
+
     this.updateActiveItemsCounter();
     this.updateElementsOnScreen();
   }
@@ -211,10 +213,10 @@ export default class TaskList {
       taskElement.onDelete(this.deleteTaskCallback);
     }
     if (this.taskStateUpdateCallback) {
-      taskElement.onTaskStateUpdate(this.taskStateUpdateCallback);
+      taskElement.onStateUpdate(this.taskStateUpdateCallback);
     }
     if (this.taskTextUpdateCallback) {
-      taskElement.onTaskTextUpdate(this.taskTextUpdateCallback);
+      taskElement.onTextUpdate(this.taskTextUpdateCallback);
     }
 
     return taskElement;
@@ -251,41 +253,53 @@ export default class TaskList {
 
   onTaskDelete(cb) {
     this.deleteTaskCallback = cb;
+
     this.taskItems.forEach((task) => {
       task.element.onDelete(cb);
     });
   }
 
   onTaskStateUpdate(cb) {
-    const handler = (task) => {
-      cb(task);
-      this.updateActiveItemsCounter();
-      this.updateElementsOnScreen();
-    };
-
-    this.taskStateUpdateCallback = handler;
+    this.taskStateUpdateCallback = cb;
 
     this.taskItems.forEach((taskItem) => {
-      taskItem.element.onTaskStateUpdate(handler);
+      taskItem.element.onStateUpdate(cb);
     });
   }
 
   onTaskTextUpdate(cb) {
     this.taskTextUpdateCallback = cb;
+
     this.taskItems.forEach((taskItem) => {
-      taskItem.element.onTaskTextUpdate(cb);
+      taskItem.element.onTextUpdate(cb);
     });
+  }
+
+  onRemoveCompletedTasks(cb) {
+    this.removeCompletedCb = cb;
   }
 
   handleTaskStateUpdate(task) {
     const taskItem = this.taskItems.find((el) => el.id === task.id);
+
     if (taskItem) {
-      taskItem.element.handleTaskStateUpdate(task);
+      taskItem.element.handleStateUpdate(task.isDone);
+      this.updateActiveItemsCounter();
+      this.updateElementsOnScreen();
+    }
+  }
+
+  handleTaskTextUpdate(task) {
+    const taskItem = this.taskItems.find((el) => el.id === task.id);
+
+    if (taskItem) {
+      taskItem.element.handleTextUpdate(task.text);
     }
   }
 
   updateAllTasksState(tasks) {
     tasks.forEach((task) => this.handleTaskStateUpdate(task));
+
     this.updateElementsOnScreen();
     this.updateActiveItemsCounter();
   }

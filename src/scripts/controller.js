@@ -2,28 +2,29 @@ export default class Controller {
   constructor(state, view) {
     this.createTask = this.createTask.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
-    this.updateTask = this.updateTask.bind(this);
     this.updateTaskState = this.updateTaskState.bind(this);
+    this.updateTaskText = this.updateTaskText.bind(this);
     this.markAllTasks = this.markAllTasks.bind(this);
 
     this.state = state;
     this.view = view;
+
     this.init();
   }
 
   init() {
-    const tasksList = this.state.getAllTasks();
-
-    if (tasksList.length) {
-      this.view.renderTasksList(this.state.getAllTasks());
-    }
-
-    this.view.onTaskTextUpdate(this.updateTask);
+    this.view.onTaskTextUpdate(this.updateTaskText);
     this.view.onTaskStateUpdate(this.updateTaskState);
     this.view.onAddTask(this.createTask);
     this.view.onTaskDelete(this.deleteTask);
     this.view.onMarkAll(this.markAllTasks);
     this.view.onRemoveCompleted(this.deleteTask);
+
+    const tasksList = this.state.getAllTasks();
+
+    if (tasksList.length) {
+      this.view.renderTasksList(this.state.getAllTasks());
+    }
   }
 
   createTask(text) {
@@ -38,13 +39,15 @@ export default class Controller {
     this.view.handleTaskDelete(id, isEmpty);
   }
 
-  updateTask(task) {
-    this.state.updateTask(task);
-  }
-
   updateTaskState(task) {
     this.state.updateTask(task);
     this.state.resetNextMarkState();
+    this.view.handleTaskStateUpdate(task);
+  }
+
+  updateTaskText(task) {
+    this.state.updateTask(task);
+    this.view.handleTaskTextUpdate(task);
   }
 
   markAllTasks() {

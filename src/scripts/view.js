@@ -50,6 +50,7 @@ export default class View {
 
     this.taskInputElement.focus();
     this.taskInputElement.placeholder = "What needs to be done?";
+
     this.taskInputElement.onfocus = () => {
       this.taskInputContainer.addClass("input-container_focused");
       this.btnAddTask.removeClass("btn_hidden");
@@ -68,17 +69,7 @@ export default class View {
   }
 
   onMarkAll(cb) {
-    this.btnMarkAll.getNode().onclick = () => {
-      cb();
-    };
-  }
-
-  handleTaskStateUpdate(task) {
-    this.taskList.handleTaskStateUpdate(task);
-  }
-
-  handleAllTasksStateUpdate(tasks) {
-    this.taskList.updateAllTasksState(tasks);
+    this.btnMarkAll.getNode().addEventListener("click", cb);
   }
 
   onAddTask(cb) {
@@ -90,6 +81,7 @@ export default class View {
       this.btnAddTask.addClass("btn_hidden");
       this.taskInputContainer.removeClass("input-container_focused");
     };
+
     this.taskInputElement.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         handleTaskInput();
@@ -119,28 +111,41 @@ export default class View {
 
   handleCreateTask(task) {
     this.taskList.addTask(task);
-    this.toggleMarkAllBtn(false);
+    this.toggleMarkAllBtn(true);
   }
 
   handleTaskDelete(id, isListEmpty) {
     this.taskList.handleDeleteTask(id);
-    this.toggleMarkAllBtn(isListEmpty);
+    this.toggleMarkAllBtn(!isListEmpty);
+  }
+
+  handleTaskStateUpdate(task) {
+    this.taskList.handleTaskStateUpdate(task);
+  }
+
+  handleTaskTextUpdate(task) {
+    this.taskList.handleTaskTextUpdate(task);
+  }
+
+  handleAllTasksStateUpdate(tasks) {
+    this.taskList.updateAllTasksState(tasks);
   }
 
   renderTasksList(list) {
     if (list.length === 0) {
-      this.toggleMarkAllBtn(true);
+      this.toggleMarkAllBtn(false);
       return;
     }
-    this.toggleMarkAllBtn(false);
+
+    this.toggleMarkAllBtn(true);
     this.taskList.renderTasksList(list);
   }
 
-  toggleMarkAllBtn(isHidden) {
-    if (isHidden) {
-      this.btnMarkAll.addClass("btn_hidden");
-    } else {
+  toggleMarkAllBtn(isShown) {
+    if (isShown) {
       this.btnMarkAll.removeClass("btn_hidden");
+    } else {
+      this.btnMarkAll.addClass("btn_hidden");
     }
   }
 }
