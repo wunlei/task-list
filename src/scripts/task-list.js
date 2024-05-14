@@ -234,6 +234,7 @@ export default class TaskList {
     if (this.taskItems.length === 0) {
       this.container.destroy();
       this.currCategory = "all";
+      this.showAll();
       return;
     }
 
