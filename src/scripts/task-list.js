@@ -82,7 +82,7 @@ export default class TaskList {
     this.btnClearCompleted = new BaseElement({
       tagName: "button",
       textContent: "Clear completed",
-      classNames: ["btn", "btn_clear-completed"],
+      classNames: ["btn", "btn_clear-completed", "btn_hidden"],
       parentNode: controlsContainer,
     });
 
@@ -186,6 +186,7 @@ export default class TaskList {
     });
 
     this.updateActiveItemsCounter();
+    this.toggleClearCompletedBtn();
     this.container.appendToParent(this.parentNode);
   }
 
@@ -242,6 +243,7 @@ export default class TaskList {
 
     this.updateElementsOnScreen();
     this.updateActiveItemsCounter();
+    this.toggleClearCompletedBtn();
   }
 
   updateActiveItemsCounter() {
@@ -289,6 +291,7 @@ export default class TaskList {
       taskItem.element.handleStateUpdate(task.isDone);
       this.updateActiveItemsCounter();
       this.updateElementsOnScreen();
+      this.toggleClearCompletedBtn();
     }
   }
 
@@ -305,5 +308,17 @@ export default class TaskList {
 
     this.updateElementsOnScreen();
     this.updateActiveItemsCounter();
+    this.toggleClearCompletedBtn();
+  }
+
+  toggleClearCompletedBtn() {
+    const hasCompleted = this.taskItems.some(
+      (el) => el.element.getCurrentTask().isDone,
+    );
+    if (hasCompleted) {
+      this.btnClearCompleted.removeClass("btn_hidden");
+    } else {
+      this.btnClearCompleted.addClass("btn_hidden");
+    }
   }
 }
