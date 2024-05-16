@@ -51,4 +51,14 @@ export default class BaseElement {
   destroy() {
     this.node.remove();
   }
+
+  addListener(type, listener, options = false) {
+    this.node.addEventListener(type, listener, options);
+
+    return {
+      removeListener: () => {
+        this.node.removeEventListener(type, listener, options);
+      },
+    };
+  }
 }

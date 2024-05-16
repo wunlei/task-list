@@ -1,12 +1,18 @@
 import BaseElement from "./base-element.js";
 import TaskItem from "./task-item.js";
 
+const CATEGORIES = {
+  ALL: "all",
+  ACTIVE: "active",
+  COMPLETED: "completed",
+};
+
 export default class TaskList {
   constructor(parentNode) {
     this.parentNode = parentNode;
     this.taskItems = [];
     this.visibleElements = [];
-    this.currCategory = "all";
+    this.currCategory = CATEGORIES.ALL;
 
     this.container = new BaseElement({
       classNames: ["task-list-container", "text-normal"],
@@ -14,8 +20,8 @@ export default class TaskList {
 
     this.taskListElement = new BaseElement({
       tagName: "ul",
-      parentNode: this.container.getNode(),
       classNames: ["tasks-list"],
+      parentNode: this.container.getNode(),
     });
 
     this.taskControlsContainer = new BaseElement({
@@ -24,73 +30,68 @@ export default class TaskList {
     });
 
     // controls
-
     const controlsContainer = this.taskControlsContainer.getNode();
 
     this.activeItemsCounter = new BaseElement({
-      parentNode: controlsContainer,
+      tagName: "span",
       textContent: "0 items left",
       classNames: ["task-counter"],
-      tagName: "span",
+      parentNode: controlsContainer,
     });
 
     this.tabsContainer = new BaseElement({
-      parentNode: controlsContainer,
       classNames: ["tabs-container"],
+      parentNode: controlsContainer,
     });
 
     const tabsContainerElement = this.tabsContainer.getNode();
 
     this.btnCategoryAll = new BaseElement({
-      parentNode: tabsContainerElement,
       tagName: "button",
       textContent: "All",
       classNames: ["btn", "tab", "tab_category-all", "tab_active"],
+      parentNode: tabsContainerElement,
     });
 
-    this.btnCategoryAll.getNode().onclick = () => {
-      this.showAll();
-    };
+    this.btnCategoryAll.addListener("click", () => this.showAll());
 
     this.btnCategoryActive = new BaseElement({
-      parentNode: tabsContainerElement,
       tagName: "button",
       textContent: "Active",
       classNames: ["btn", "tab", "tab_category-active"],
+      parentNode: tabsContainerElement,
     });
 
-    this.btnCategoryActive.getNode().onclick = () => {
-      this.showActive();
-    };
+    this.btnCategoryActive.addListener("click", () => this.showActive());
 
     this.btnCategoryCompleted = new BaseElement({
-      parentNode: tabsContainerElement,
       tagName: "button",
       textContent: "Completed",
       classNames: ["btn", "tab", "tab_category-completed"],
+      parentNode: tabsContainerElement,
     });
 
-    this.btnCategoryCompleted.getNode().onclick = () => {
-      this.showCompleted();
-    };
+    this.btnCategoryCompleted.addListener("click", () => this.showCompleted());
 
     this.categoryBtns = {
-      all: this.btnCategoryAll,
-      active: this.btnCategoryActive,
-      completed: this.btnCategoryCompleted,
+      [CATEGORIES.ALL]: this.btnCategoryAll,
+      [CATEGORIES.ACTIVE]: this.btnCategoryActive,
+      [CATEGORIES.COMPLETED]: this.btnCategoryCompleted,
     };
 
     this.btnClearCompleted = new BaseElement({
-      parentNode: controlsContainer,
       tagName: "button",
       textContent: "Clear completed",
       classNames: ["btn", "btn_clear-completed"],
+      parentNode: controlsContainer,
     });
 
-    this.btnClearCompleted.getNode().onclick = () =>
-      this.removeCompletedTasks();
+    this.btnClearCompleted.addListener("click", () =>
+      this.removeCompletedTasks(),
+    );
 
     this.hintTextElement = new BaseElement({
+      tagName: "span",
       classNames: ["hint"],
     });
   }
@@ -107,14 +108,13 @@ export default class TaskList {
     });
 
     if (this.visibleElements.length === 0 && this.taskItems.length > 0) {
-      if (this.currCategory === "active") {
+      if (this.currCategory === CATEGORIES.ACTIVE) {
         this.hintTextElement.updateTextContent("All done ヽ(o＾▽＾o)ノ");
       } else {
         this.hintTextElement.updateTextContent("No tasks (｡╯︵╰｡)");
       }
 
       this.hintTextElement.appendToParent(this.taskListElement.getNode());
-
       return;
     }
 
@@ -127,22 +127,22 @@ export default class TaskList {
     // if (this.currCategory === "all") {
     //   this.showAll();
     // }
-    if (this.currCategory === "active") {
+    if (this.currCategory === CATEGORIES.ACTIVE) {
       this.showActive();
     }
-    if (this.currCategory === "completed") {
+    if (this.currCategory === CATEGORIES.COMPLETED) {
       this.showCompleted();
     }
   }
 
   showAll() {
-    this.currCategory = "all";
+    this.currCategory = CATEGORIES.ALL;
     this.visibleElements = this.taskItems;
     this.renderActiveCategoryItems();
   }
 
   showActive() {
-    this.currCategory = "active";
+    this.currCategory = CATEGORIES.ACTIVE;
     this.visibleElements = this.taskItems.filter(
       (item) => !item.element.getCurrentTask().isDone,
     );
@@ -150,7 +150,7 @@ export default class TaskList {
   }
 
   showCompleted() {
-    this.currCategory = "completed";
+    this.currCategory = CATEGORIES.COMPLETED;
     this.visibleElements = this.taskItems.filter(
       (item) => item.element.getCurrentTask().isDone,
     );
@@ -159,12 +159,14 @@ export default class TaskList {
 
   removeCompletedTasks() {
     const cb = this.removeCompletedCb;
+
     if (!cb) {
       return;
     }
 
     this.taskItems.forEach((item) => {
       const task = item.element.getCurrentTask();
+
       if (task.isDone) {
         cb(task.id);
       }
@@ -233,7 +235,7 @@ export default class TaskList {
 
     if (this.taskItems.length === 0) {
       this.container.destroy();
-      this.currCategory = "all";
+      this.currCategory = CATEGORIES.ALL;
       this.showAll();
       return;
     }

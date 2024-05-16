@@ -9,6 +9,7 @@ export default class State {
     // this.tasks = mock;
     this.nextMarkState = true;
     this.getFromLocalStorage();
+
     window.addEventListener("beforeunload", () => this.saveToLocalStorage());
   }
 
@@ -37,6 +38,7 @@ export default class State {
     };
 
     this.tasks.push(newTask);
+
     return newTask;
   }
 

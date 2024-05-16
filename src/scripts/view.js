@@ -6,16 +6,16 @@ export default class View {
     this.parent = parentNode;
 
     this.mainElement = new BaseElement({
-      parentNode: this.parent,
       tagName: "main",
       classNames: ["main"],
+      parentNode: this.parent,
     });
 
     this.pageTitle = new BaseElement({
-      parentNode: this.mainElement.getNode(),
-      classNames: ["title-h2", "page-title"],
       tagName: "h1",
       textContent: "todos",
+      classNames: ["title-h2", "page-title"],
+      parentNode: this.mainElement.getNode(),
     });
 
     this.appContainer = new BaseElement({
@@ -28,22 +28,22 @@ export default class View {
       classNames: [
         "create-task-container",
         "text-normal",
-        "input-container_focused",
+        "create-task-container_focused",
       ],
     });
 
     this.btnMarkAll = new BaseElement({
-      parentNode: this.taskInputContainer.getNode(),
       tagName: "button",
       classNames: ["btn", "btn_mark-all", "icon-btn", "btn_hidden"],
+      parentNode: this.taskInputContainer.getNode(),
     });
 
     this.btnMarkAll.getNode().title = "Mark all";
 
     this.taskInput = new BaseElement({
-      parentNode: this.taskInputContainer.getNode(),
       tagName: "input",
       classNames: ["input", "input_create-task"],
+      parentNode: this.taskInputContainer.getNode(),
     });
 
     this.taskInputElement = this.taskInput.getNode();
@@ -51,15 +51,15 @@ export default class View {
     this.taskInputElement.focus();
     this.taskInputElement.placeholder = "What needs to be done?";
 
-    this.taskInputElement.onfocus = () => {
-      this.taskInputContainer.addClass("input-container_focused");
+    this.taskInput.addListener("focus", () => {
+      this.taskInputContainer.addClass("create-task-container_focused");
       this.btnAddTask.removeClass("btn_hidden");
-    };
+    });
 
     this.btnAddTask = new BaseElement({
-      parentNode: this.taskInputContainer.getNode(),
       tagName: "button",
       classNames: ["btn", "btn_add-task", "icon-btn"],
+      parentNode: this.taskInputContainer.getNode(),
     });
 
     this.btnAddTask.getNode().title = "Add task";
@@ -69,7 +69,7 @@ export default class View {
   }
 
   onMarkAll(cb) {
-    this.btnMarkAll.getNode().addEventListener("click", cb);
+    this.btnMarkAll.addListener("click", cb);
   }
 
   onAddTask(cb) {
@@ -78,19 +78,21 @@ export default class View {
         cb(this.taskInputElement.value);
         this.taskInputElement.value = "";
       }
+
       this.btnAddTask.addClass("btn_hidden");
-      this.taskInputContainer.removeClass("input-container_focused");
+      this.taskInputContainer.removeClass("create-task-container_focused");
     };
 
-    this.taskInputElement.addEventListener("keydown", (e) => {
+    this.taskInput.addListener("keydown", (e) => {
       if (e.key === "Enter") {
         handleTaskInput();
         this.btnAddTask.removeClass("btn_hidden");
-        this.taskInputContainer.addClass("input-container_focused");
+        this.taskInputContainer.addClass("create-task-container_focused");
       }
     });
-    this.taskInputElement.addEventListener("blur", handleTaskInput);
-    this.btnAddTask.getNode().addEventListener("click", handleTaskInput);
+
+    this.taskInput.addListener("blur", handleTaskInput);
+    this.btnAddTask.addListener("click", handleTaskInput);
   }
 
   onTaskDelete(cb) {

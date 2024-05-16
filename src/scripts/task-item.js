@@ -7,9 +7,9 @@ export default class TaskItem {
     this.text = task.text;
 
     this.container = new BaseElement({
-      parentNode,
       tagName: "li",
       classNames: ["task-item"],
+      parentNode,
     });
 
     const containerNode = this.container.getNode();
@@ -21,9 +21,9 @@ export default class TaskItem {
     });
 
     this.checkbox = new BaseElement({
-      parentNode: this.taskWrapper.getNode(),
       tagName: "input",
       classNames: ["task-checkbox"],
+      parentNode: this.taskWrapper.getNode(),
     });
 
     const checkboxNode = this.checkbox.getNode();
@@ -37,22 +37,22 @@ export default class TaskItem {
     }
 
     this.taskText = new BaseElement({
-      parentNode: this.taskWrapper.getNode(),
       tagName: "span",
       textContent: this.text,
       classNames: ["task-text", "text-big"],
+      parentNode: this.taskWrapper.getNode(),
     });
 
     this.editBtn = new BaseElement({
-      parentNode: containerNode,
       tagName: "button",
       classNames: ["btn", "btn_edit-task", "icon-btn"],
+      parentNode: containerNode,
     });
 
     this.deleteBtn = new BaseElement({
-      parentNode: containerNode,
       tagName: "button",
       classNames: ["btn", "btn_delete-task", "icon-btn"],
+      parentNode: containerNode,
     });
 
     this.taskEditorContainer = new BaseElement({
@@ -61,23 +61,18 @@ export default class TaskItem {
 
     this.taskTextInput = new BaseElement({
       tagName: "input",
-      parentNode: this.taskEditorContainer.getNode(),
       classNames: ["input", "input_task-text"],
+      parentNode: this.taskEditorContainer.getNode(),
     });
 
     this.saveBtn = new BaseElement({
       tagName: "button",
-      parentNode: this.taskEditorContainer.getNode(),
       classNames: ["btn", "btn_save-task", "icon-btn"],
+      parentNode: this.taskEditorContainer.getNode(),
     });
 
-    this.editBtn.getNode().onclick = () => {
-      this.onTextEdit();
-    };
-
-    this.taskText.getNode().ondblclick = () => {
-      this.onTextEdit();
-    };
+    this.editBtn.addListener("click", () => this.onTextEdit());
+    this.taskText.addListener("dblclick", () => this.onTextEdit());
   }
 
   getCurrentTask() {
@@ -103,7 +98,7 @@ export default class TaskItem {
   }
 
   onDelete(cb) {
-    this.deleteBtn.getNode().addEventListener("click", () => cb(this.id));
+    this.deleteBtn.addListener("click", () => cb(this.id));
   }
 
   onTextEdit() {
@@ -148,7 +143,7 @@ export default class TaskItem {
       }
     });
 
-    this.saveBtn.getNode().addEventListener("click", handleTodoUpdate);
+    this.saveBtn.addListener("click", handleTodoUpdate);
   }
 
   handleTaskUpdate(task) {
