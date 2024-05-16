@@ -22,82 +22,89 @@ html {
 
 .body {
   padding: 5px;
-  margin: 0;
-  background-color: var(--color-green-100);
-  color: var(--color-black);
+
   font-family: "Roboto", sans-serif;
+  color: var(--color-black);
+
+  background-color: var(--color-green-100);
 }
 
 .main {
   display: flex;
-  max-width: 90%;
   flex-direction: column;
   align-items: center;
+  max-width: 90%;
   margin: 0 auto;
 }
 
 .title-h2 {
-  font-size: 59px;
   font-weight: 700;
+  font-size: 59px;
   line-height: 1.24;
 }
 
 .text-normal {
-  font-size: 20px;
   font-weight: 400;
+  font-size: 20px;
   line-height: 1.42;
 }
 
 .btn {
-  border: none;
   margin: 0;
+  border: none;
   cursor: pointer;
 }
 
 .icon-btn {
+  flex-shrink: 0;
   width: 30px;
   height: 30px;
-  flex-shrink: 0;
+
   background-color: transparent;
   background-size: cover;
 }
 
 .btn_hidden {
-  pointer-events: none;
   visibility: hidden;
+  pointer-events: none;
 }
 
 .page-title {
-  color: var(--color-green-400);
   text-align: center;
+  color: var(--color-green-400);
 }
 
 .app-container {
-  display: flex;
   width: 100%;
   max-width: 750px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   padding: 10px;
+
   border-radius: 10px;
   background-color: var(--color-white);
   box-shadow: 0 4px 3px 0 rgba(0, 0, 0, 0.25);
-  gap: 15px;
 }
 
 .create-task-container {
   display: flex;
+  gap: 20px;
   width: 100%;
   padding: 20px;
+  margin-bottom: 15px;
+
   border: 1px solid var(--color-gray-300);
   border-radius: 10px;
+
   background-color: var(--color-gray-100);
-  gap: 20px;
 }
 
-.input-container_focused {
+.create-task-container_focused {
   outline: 2px solid var(--color-gray-300);
+}
+
+@media (hover: hover) {
+  .create-task-container:hover {
+    background-color: var(--color-gray-200);
+  }
 }
 
 .btn_mark-all {
@@ -105,8 +112,8 @@ html {
 }
 
 .input_create-task {
-  display: block;
   width: 100%;
+
   border: none;
   background-color: transparent;
   outline: none;
@@ -116,27 +123,23 @@ html {
   background-image: url(./assets/plus-circle.svg);
 }
 
-.task-list-container {
-  width: 100%;
-}
-
 .tasks-list {
   display: flex;
   flex-direction: column;
-  padding: 0 20px;
   margin: 0;
   margin-bottom: 20px;
+  padding: 0;
   row-gap: 10px;
 }
 
 .task-item {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
+  align-items: center;
+  column-gap: 5px;
+  padding: 20px 24px;
 
   border-bottom: 1px solid black;
-  column-gap: 5px;
 }
 
 .task-item:hover .btn_delete-task {
@@ -145,8 +148,8 @@ html {
 }
 
 .task-item_done .task-text {
-  color: var(--color-gray-300);
   text-decoration: line-through;
+  color: var(--color-gray-300);
 }
 
 .task-wrapper {
@@ -159,17 +162,17 @@ html {
 
 .task-checkbox {
   position: relative;
+
+  flex-shrink: 0;
   width: 25px;
   height: 25px;
-  flex-shrink: 0;
+  margin: 0;
+
   border: 3px solid black;
   border-radius: 5px;
-  margin: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
   background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
+  appearance: none;
 }
 
 @media (hover: hover) {
@@ -187,12 +190,15 @@ html {
   position: absolute;
   top: calc(50% - 8px);
   left: 4px;
+
   width: 18px;
   height: 18px;
+
   background-image: url(./assets/check.svg);
   background-size: cover;
-  content: "";
   opacity: 0;
+
+  content: "";
   pointer-events: none;
 }
 
@@ -203,7 +209,6 @@ html {
 .btn_delete-task {
   background-image: url(./assets/trash.svg);
   opacity: 0;
-
   pointer-events: none;
 }
 
@@ -225,13 +230,13 @@ html {
 
 .task-editor-container {
   display: flex;
-  width: 100%;
   align-items: center;
+  gap: 20px;
+  width: 100%;
   padding: 5px 35px;
 
   border: 2px solid var(--color-green-300);
   border-radius: 10px;
-  gap: 20px;
 }
 
 @media (hover: hover) {
@@ -242,6 +247,7 @@ html {
 
 .input_task-text {
   width: 100%;
+
   border: none;
   background-color: transparent;
   outline: none;
@@ -273,13 +279,17 @@ html {
   position: absolute;
   bottom: -2px;
   left: 0;
+
   width: 100%;
   height: 2px;
+
   background-color: var(--color-orange-200);
-  content: "";
+
+  transition: transform 0.3s ease;
   transform: scaleX(0);
   transform-origin: bottom right;
-  transition: transform 0.3s ease;
+
+  content: "";
 }
 
 @media (hover: hover) {
@@ -300,10 +310,14 @@ html {
 .btn_clear-completed {
   padding: 5px 8px;
   border-radius: 10px;
-  background-color: var(--color-white);
+
   color: var(--color-black);
+  background-color: var(--color-white);
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn_clear-completed:hover {
