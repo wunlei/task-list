@@ -76,10 +76,11 @@ export default class View {
 
   onAddTask(cb) {
     const handleTaskInput = () => {
-      if (this.taskInputElement.value) {
-        cb(this.taskInputElement.value);
-        this.taskInputElement.value = "";
+      const taskText = this.taskInputElement.value.trim();
+      if (taskText) {
+        cb(taskText);
       }
+      this.taskInputElement.value = "";
 
       this.btnAddTask.addClass("btn_hidden");
       this.taskInputContainer.removeClass("create-task-container_focused");
