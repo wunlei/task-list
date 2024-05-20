@@ -354,4 +354,8 @@ html {
   .task-item {
     padding: 15px 5px;
   }
+
+  .task-editor-container {
+    padding: 5px;
+  }
 }
