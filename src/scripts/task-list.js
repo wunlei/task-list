@@ -234,6 +234,9 @@ export default class TaskList {
       return true;
     });
 
+    this.toggleClearCompletedBtn();
+    this.updateActiveItemsCounter();
+
     if (this.taskItems.length === 0) {
       this.container.destroy();
       this.currCategory = CATEGORIES.ALL;
@@ -242,8 +245,6 @@ export default class TaskList {
     }
 
     this.updateElementsOnScreen();
-    this.updateActiveItemsCounter();
-    this.toggleClearCompletedBtn();
   }
 
   updateActiveItemsCounter() {
@@ -290,8 +291,8 @@ export default class TaskList {
     if (taskItem) {
       taskItem.element.handleStateUpdate(task.isDone);
       this.updateActiveItemsCounter();
-      this.updateElementsOnScreen();
       this.toggleClearCompletedBtn();
+      this.updateElementsOnScreen();
     }
   }
 
@@ -305,10 +306,6 @@ export default class TaskList {
 
   updateAllTasksState(tasks) {
     tasks.forEach((task) => this.handleTaskStateUpdate(task));
-
-    this.updateElementsOnScreen();
-    this.updateActiveItemsCounter();
-    this.toggleClearCompletedBtn();
   }
 
   toggleClearCompletedBtn() {
