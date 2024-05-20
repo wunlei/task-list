@@ -8,9 +8,10 @@ export default class TaskItem {
 
     this.container = new BaseElement({
       tagName: "li",
-      classNames: ["task-item"],
-      parentNode,
+      classNames: ["task-item"]
     });
+
+    this.container.prependToParent(parentNode);
 
     const containerNode = this.container.getNode();
 

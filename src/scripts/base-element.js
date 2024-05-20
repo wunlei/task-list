@@ -18,6 +18,10 @@ export default class BaseElement {
     parentNode.append(this.node);
   }
 
+  prependToParent(parentNode) {
+    parentNode.prepend(this.node);
+  }
+
   appendChild(child) {
     this.node.append(child.getNode());
   }

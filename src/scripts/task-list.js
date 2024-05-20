@@ -193,7 +193,7 @@ export default class TaskList {
   addTask(task) {
     const taskElement = this.createTaskElement(task);
 
-    this.taskItems.push({
+    this.taskItems.unshift({
       id: task.id,
       element: taskElement,
     });
