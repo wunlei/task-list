@@ -136,10 +136,17 @@ export default class TaskItem {
       this.showTaskElement();
     };
 
+    const handleEscape = () => {
+      this.showTaskElement();
+    };
+
     taskEditInputElement.addEventListener("blur", handleTodoUpdate);
     taskEditInputElement.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         handleTodoUpdate();
+      }
+      if (e.key === "Escape") {
+        handleEscape();
       }
     });
 
