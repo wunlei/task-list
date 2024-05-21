@@ -8,9 +8,10 @@ export default class TaskItem {
 
     this.container = new BaseElement({
       tagName: "li",
-      classNames: ["task-item"],
-      parentNode,
+      classNames: ["task-item"]
     });
+
+    this.container.prependToParent(parentNode);
 
     const containerNode = this.container.getNode();
 
@@ -136,10 +137,17 @@ export default class TaskItem {
       this.showTaskElement();
     };
 
+    const handleEscape = () => {
+      this.showTaskElement();
+    };
+
     taskEditInputElement.addEventListener("blur", handleTodoUpdate);
     taskEditInputElement.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         handleTodoUpdate();
+      }
+      if (e.key === "Escape") {
+        handleEscape();
       }
     });
 

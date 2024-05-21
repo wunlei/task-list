@@ -25,11 +25,7 @@ export default class View {
 
     this.taskInputContainer = new BaseElement({
       parentNode: this.appContainer.getNode(),
-      classNames: [
-        "create-task-container",
-        "text-normal",
-        "create-task-container_focused",
-      ],
+      classNames: ["create-task-container", "text-normal"],
     });
 
     this.btnMarkAll = new BaseElement({
@@ -48,8 +44,14 @@ export default class View {
 
     this.taskInputElement = this.taskInput.getNode();
 
-    this.taskInputElement.focus();
     this.taskInputElement.placeholder = "What needs to be done?";
+
+    const mobileMediaquery = window.matchMedia("(hover: hover)");
+
+    if (mobileMediaquery.matches) {
+      this.taskInputElement.focus();
+      this.taskInputContainer.addClass("create-task-container_focused");
+    }
 
     this.taskInput.addListener("focus", () => {
       this.taskInputContainer.addClass("create-task-container_focused");
@@ -74,10 +76,11 @@ export default class View {
 
   onAddTask(cb) {
     const handleTaskInput = () => {
-      if (this.taskInputElement.value) {
-        cb(this.taskInputElement.value);
-        this.taskInputElement.value = "";
+      const taskText = this.taskInputElement.value.trim();
+      if (taskText) {
+        cb(taskText);
       }
+      this.taskInputElement.value = "";
 
       this.btnAddTask.addClass("btn_hidden");
       this.taskInputContainer.removeClass("create-task-container_focused");

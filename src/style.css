@@ -52,21 +52,27 @@ html {
 .btn {
   margin: 0;
   border: none;
+  color: inherit;
   cursor: pointer;
 }
 
 .icon-btn {
+  display: block;
   flex-shrink: 0;
   width: 30px;
   height: 30px;
+  padding: 0;
 
   background-color: transparent;
   background-size: cover;
 }
 
 .btn_hidden {
-  visibility: hidden;
-  pointer-events: none;
+  display: none;
+}
+
+.input {
+  padding: 0;
 }
 
 .page-title {
@@ -89,7 +95,6 @@ html {
   gap: 20px;
   width: 100%;
   padding: 20px;
-  margin-bottom: 15px;
 
   border: 1px solid var(--color-gray-300);
   border-radius: 10px;
@@ -112,6 +117,8 @@ html {
 }
 
 .input_create-task {
+  display: block;
+  min-height: 30px;
   width: 100%;
 
   border: none;
@@ -121,6 +128,10 @@ html {
 
 .btn_add-task {
   background-image: url(./assets/plus-circle.svg);
+}
+
+.task-list-container {
+  margin-top: 15px;
 }
 
 .tasks-list {
@@ -224,7 +235,7 @@ html {
   }
 
   .btn_edit-task {
-    display: inline;
+    display: block;
   }
 }
 
@@ -324,6 +335,27 @@ html {
   background-color: var(--color-orange-200);
 }
 
+.btn_clear-completed.btn_hidden {
+  display: block;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .hint {
   text-align: center;
+}
+
+@media (max-width: 500px) {
+  .create-task-container {
+    padding: 5px;
+    gap: 10px;
+  }
+
+  .task-item {
+    padding: 15px 5px;
+  }
+
+  .task-editor-container {
+    padding: 5px;
+  }
 }
